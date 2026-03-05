@@ -40,6 +40,28 @@ export const register = async (req, res) => {
    }
 }
 
+export const otpVerification = async (req, res) => {
+   try {
+      const { otp } = req.body;
+      if (!otp) {
+         return res.status(401).json({ message: "pelase enter your otp" });
+      }
+      const user = await userModel.findOne({
+         verificationCode: otp,
+         verificationExpiry: { $gt: Date.now() }
+      })
+      if (!user) return res.status(401).json({ message: "otp is invalid or expired" });
+      user.isVerified = true;
+      user.verificationCode = undefined;
+      user.verificationExpiry = undefined;
+      await user.save();
+      return res.status(200).json({ user, message: "otp is valid" });
+   }
+   catch (error) {
+      return res.status(501).json({ message: error.message });
+   }
+}
+
 export const login = async (req, res) => {
    try {
       const { email, password } = req.body;
@@ -73,3 +95,4 @@ export const login = async (req, res) => {
       return res.status(501).json({ message: error.message });
    }
 }
+

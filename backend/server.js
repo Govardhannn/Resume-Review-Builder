@@ -1,6 +1,9 @@
 import "dotenv/config"
 import app from "./src/app.js"
 import dbConnection from "./src/config/db.js";
+import cookieParser from "cookie-parser"
+
+app.use(cookieParser())
 const port = process.env.PORT || 8090;
 
 

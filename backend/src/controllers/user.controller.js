@@ -1,6 +1,7 @@
 import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
+import sendOtp from "../utils/send.otp.js";
 
 
 export const register = async (req, res) => {
@@ -35,6 +36,10 @@ export const register = async (req, res) => {
         }
 
         return res.status(201).json({ user, message: "user created sucessfully" });
+
+        sendOtp (user.verificationCode, user.email);
+      return res.status(201).json({ user, message: "user created sucessfully" });
+
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
@@ -118,4 +123,10 @@ export const logout = async (req, res) => {
             message: error.message
         });
     }
+};
+
+
+export const getjobs = async (req, res) => {
+
+  
 };

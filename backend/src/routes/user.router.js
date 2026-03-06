@@ -9,6 +9,6 @@ route.post('/register', register);
 route.post('/verify-email',otpVerification);
 route.post('/login', login);
 route.get('/logout',authMiddleware,logout);
-route.get('/get/tranding-jobs',authMiddleware,getjobs);
+route.get('/get/tranding-jobs',getjobs);
 
 export default route;

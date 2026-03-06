@@ -4,30 +4,52 @@ import jwt from "jsonwebtoken";
 const authMiddleware = async (req, res, next) => {
    try {
 
+      console.log("---- AUTH MIDDLEWARE START ----");
+
       const token = req.cookies.token;
 
+      console.log("Token from cookie:", token);
+
       if (!token) {
-         return res.status(401).json({ message: "Unauthorized user" });
+         console.log("No token found");
+         return res.status(401).json({
+            message: "Unauthorized user"
+         });
       }
 
-      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      const decoded = jwt.verify(
+         token,
+         process.env.ACCESS_TOKEN_SECRET
+      );
 
-      if (!decoded) {
-         return res.status(401).json({ message: "Invalid token" });
-      }
+      console.log("Decoded token:", decoded);
 
-      const authenticatedUser = await userModel.findById(decoded.id);
+      const authenticatedUser = await userModel.findById(decoded._id);
+
+      console.log("Authenticated user:", authenticatedUser);
 
       if (!authenticatedUser) {
-         return res.status(401).json({ message: "User not found" });
+         console.log("User not found in database");
+         return res.status(401).json({
+            message: "User not found"
+         });
       }
 
       req.userId = authenticatedUser._id;
 
+      console.log("User authenticated successfully");
+      console.log("---- AUTH MIDDLEWARE END ----");
+
       next();
 
    } catch (error) {
-      return res.status(401).json({ message: "Authentication failed" });
+
+      console.log("Auth middleware error:", error.message);
+
+      return res.status(401).json({
+         message: "Authentication failed"
+      });
+
    }
 };
 
